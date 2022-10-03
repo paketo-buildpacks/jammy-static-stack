@@ -1,0 +1,48 @@
+id = "io.buildpacks.stacks.jammy.static"
+homepage = "https://github.com/paketo-buildpacks/jammy-static-stack"
+maintainer = "Paketo Buildpacks"
+
+platforms = ["linux/amd64"]
+
+[build]
+  description = "ubuntu:jammy with compilers and shell utilities"
+  dockerfile = "./build.Dockerfile"
+  gid = 1000
+  shell = "/bin/bash"
+  uid = 1001
+
+  [build.args]
+    sources = """
+    deb http://archive.ubuntu.com/ubuntu jammy main universe multiverse
+    deb http://archive.ubuntu.com/ubuntu jammy-updates main universe multiverse
+    deb http://archive.ubuntu.com/ubuntu jammy-security main universe multiverse
+    """
+
+    packages = """\
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    jq \
+    libgmp-dev \
+    libssl3 \
+    libyaml-0-2 \
+    netbase \
+    openssl \
+    tzdata \
+    xz-utils \
+    zlib1g-dev \
+    """
+
+[run]
+  description = "jammy for statically-linked applications containing tzdata and ca-certificates"
+  dockerfile = "./run/run.Dockerfile"
+  gid = 1000
+  shell = "/sbin/nologin"
+  uid = 1002
+
+  [run.args]
+    packages = """\
+    ca-certificates \
+    tzdata \
+    """
